@@ -18,6 +18,7 @@ export class App extends Component {
       isLoading: false,
       showModal: false,
       selectedImage: '',
+      // isOpenModal: false,
     };
   }
 
@@ -41,7 +42,7 @@ export class App extends Component {
           webformatURL: image.webformatURL,
           largeImageURL: image.largeImageURL,
         }));
-
+        console.log(newImages);
         this.setState(prevState => ({
           images: [...prevState.images, ...newImages],
           page: prevState.page + 1,
@@ -59,6 +60,7 @@ export class App extends Component {
   };
 
   handleImageClick = imageURL => {
+    console.log(imageURL);
     this.setState({ showModal: true, selectedImage: imageURL });
   };
 
@@ -73,15 +75,7 @@ export class App extends Component {
       <div>
         <Searchbar onSubmit={this.handleSubmit} />
 
-        <ImageGallery images={images}>
-          {images.map(image => (
-            <ImageGalleryItem
-              key={image.id}
-              webformatURL={image.webformatURL}
-              onClick={() => this.handleImageClick(image.largeImageURL)}
-            />
-          ))}
-        </ImageGallery>
+        <ImageGallery images={images} onClick={this.handleImageClick} />
 
         {isLoading && <Loader />}
 
@@ -90,7 +84,10 @@ export class App extends Component {
         )}
 
         {showModal && (
-          <Modal imageURL={selectedImage} onClose={this.handleCloseModal} />
+          <Modal
+            largeImageURL={selectedImage}
+            onClose={this.handleCloseModal}
+          />
         )}
       </div>
     );

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import * as basicLightbox from 'basiclightbox';
+// import * as basicLightbox from 'basiclightbox';
 
 class Modal extends Component {
   componentDidMount() {
