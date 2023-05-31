@@ -2,10 +2,10 @@ import { Component } from 'react';
 import axios from 'axios';
 import Searchbar from './searchbar/Searchbar';
 import ImageGallery from './imagegallery/Imagegallery';
-// import ImageGalleryItem from './imagegalleryitem/ImageGalleryitem';
 import Button from './button/Button';
 import Loader from './loader/Loader';
 import Modal from './modal/Modal';
+import css from '../Styles.module.css';
 
 const API_KEY = '36214918-c54bf3212caa76f3a1fc6176b';
 export class App extends Component {
@@ -18,12 +18,14 @@ export class App extends Component {
       isLoading: false,
       showModal: false,
       selectedImage: '',
-      // isOpenModal: false,
     };
   }
 
   handleSubmit = query => {
     this.setState({ query, page: 1, images: [] }, () => {
+      if (!query.trim()) {
+        return alert('Please enter a query');
+      }
       this.fetchImages();
     });
   };
@@ -42,7 +44,7 @@ export class App extends Component {
           webformatURL: image.webformatURL,
           largeImageURL: image.largeImageURL,
         }));
-        console.log(newImages);
+
         this.setState(prevState => ({
           images: [...prevState.images, ...newImages],
           page: prevState.page + 1,
@@ -60,7 +62,6 @@ export class App extends Component {
   };
 
   handleImageClick = imageURL => {
-    console.log(imageURL);
     this.setState({ showModal: true, selectedImage: imageURL });
   };
 
@@ -72,7 +73,7 @@ export class App extends Component {
     const { images, isLoading, showModal, selectedImage } = this.state;
 
     return (
-      <div>
+      <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmit} />
 
         <ImageGallery images={images} onClick={this.handleImageClick} />

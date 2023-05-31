@@ -1,7 +1,9 @@
-const ImageGalleryItem = ({ webformatURL, largeImageURL, onClick }) => {
+import css from './ImageGalleryitem.module.css';
+
+const ImageGalleryItem = ({ webformatURL }) => {
   return (
-    <li className="gallery-item">
-      <img src={webformatURL} alt="" />
+    <li className={css.ImageGalleryItem}>
+      <img src={webformatURL} alt="" className={css.ImageGalleryItem_image} />
     </li>
   );
 };

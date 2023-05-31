@@ -1,6 +1,8 @@
+import css from './Imagegallery.module.css';
+
 const ImageGallery = ({ images, onClick }) => {
   return (
-    <ul className="gallery">
+    <ul className={css.ImageGallery}>
       {images.map(image => (
         <li
           key={image.id}

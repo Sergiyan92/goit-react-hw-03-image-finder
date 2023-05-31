@@ -1,5 +1,5 @@
 import { Component } from 'react';
-// import * as basicLightbox from 'basiclightbox';
+import css from './Modal.module.css';
 
 class Modal extends Component {
   componentDidMount() {
@@ -16,11 +16,17 @@ class Modal extends Component {
     }
   };
 
+  handleBackdrop = event => {
+    const { target, currentTarget } = event;
+    if (target === currentTarget) {
+      this.props.onClose();
+    }
+  };
   render() {
-    const { largeImageURL, onClose } = this.props;
+    const { largeImageURL } = this.props;
     return (
-      <div className="overlay" onClick={onClose}>
-        <div className="modal">
+      <div className={css.Overlay} onClick={this.handleBackdrop}>
+        <div className={css.Modal}>
           <img src={largeImageURL} alt="" />
         </div>
       </div>
