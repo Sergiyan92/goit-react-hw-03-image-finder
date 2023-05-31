@@ -1,5 +1,5 @@
 import css from './Imagegallery.module.css';
-
+import PropTypes from 'prop-types';
 const ImageGallery = ({ images, onClick }) => {
   return (
     <ul className={css.ImageGallery}>
@@ -17,5 +17,8 @@ const ImageGallery = ({ images, onClick }) => {
     </ul>
   );
 };
-
 export default ImageGallery;
+ImageGallery.propTypes = {
+  images: PropTypes.array.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
