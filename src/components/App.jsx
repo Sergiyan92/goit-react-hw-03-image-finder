@@ -2,7 +2,7 @@ import { Component } from 'react';
 import axios from 'axios';
 import Searchbar from './searchbar/Searchbar';
 import ImageGallery from './imagegallery/Imagegallery';
-import ImageGalleryItem from './imagegalleryitem/ImageGalleryitem';
+// import ImageGalleryItem from './imagegalleryitem/ImageGalleryitem';
 import Button from './button/Button';
 import Loader from './loader/Loader';
 import Modal from './modal/Modal';
