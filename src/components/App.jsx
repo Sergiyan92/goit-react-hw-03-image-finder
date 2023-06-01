@@ -1,64 +1,64 @@
 import { Component } from 'react';
-import axios from 'axios';
 import Searchbar from './searchbar/Searchbar';
 import ImageGallery from './imagegallery/Imagegallery';
 import Button from './button/Button';
 import Loader from './loader/Loader';
 import Modal from './modal/Modal';
 import css from '../Styles.module.css';
+import { getImages } from '../service/sevice';
 
-const API_KEY = '36214918-c54bf3212caa76f3a1fc6176b';
 export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-      page: 1,
-      images: [],
-      isLoading: false,
-      showModal: false,
-      selectedImage: '',
-    };
+  state = {
+    query: '',
+    page: 1,
+    images: [],
+    isLoading: false,
+    showModal: false,
+    selectedImage: '',
+    imagesError: null,
+    showBtn: false,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const { query, page } = this.state;
+    if (prevState.page !== page || prevState.query !== query) {
+      this.fetchImages();
+    }
   }
+  fetchImages = async () => {
+    try {
+      const { page, query } = this.state;
+      this.setState({ isLoading: true });
+      const { imagesData } = await getImages(page, query);
+      this.setState(prevState => ({
+        isLoading: false,
+        imagesError: null,
+        images: [...prevState.images, ...imagesData],
+      }));
+    } catch (error) {
+      this.setState({
+        imagesError: error.message,
+        isLoading: false,
+      });
+    }
+  };
 
   handleSubmit = query => {
-    this.setState({ query, page: 1, images: [] }, () => {
-      if (!query.trim()) {
-        return alert('Please enter a query');
-      }
-      this.fetchImages();
+    if (this.state.query === query) {
+      return alert('Please enter a query');
+    }
+    this.setState({
+      query,
+      page: 1,
+      images: [],
+      imagesError: '',
+      isLoading: false,
     });
   };
-
-  fetchImages = () => {
-    const { query, page } = this.state;
-    const url = `https://pixabay.com/api/?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
-
-    this.setState({ isLoading: true });
-
-    axios
-      .get(url)
-      .then(response => {
-        const newImages = response.data.hits.map(image => ({
-          id: image.id,
-          webformatURL: image.webformatURL,
-          largeImageURL: image.largeImageURL,
-        }));
-
-        this.setState(prevState => ({
-          images: [...prevState.images, ...newImages],
-          page: prevState.page + 1,
-          isLoading: false,
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-        this.setState({ isLoading: false });
-      });
-  };
-
   handleLoadMore = () => {
-    this.fetchImages();
+    this.setState(prev => ({
+      page: prev.page + 1,
+    }));
   };
 
   handleImageClick = imageURL => {
@@ -80,7 +80,7 @@ export class App extends Component {
 
         {isLoading && <Loader />}
 
-        {images.length > 0 && !isLoading && (
+        {images.length > 11 && !isLoading && (
           <Button onClick={this.handleLoadMore}>Load More</Button>
         )}
 
