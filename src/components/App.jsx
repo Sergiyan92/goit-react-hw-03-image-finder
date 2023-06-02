@@ -29,17 +29,17 @@ export class App extends Component {
     try {
       const { page, query } = this.state;
       this.setState({ isLoading: true });
-      const { imagesData } = await getImages(page, query);
+      const { imagesData, totalImages } = await getImages(page, query);
       this.setState(prevState => ({
-        isLoading: false,
-        imagesError: null,
         images: [...prevState.images, ...imagesData],
+        showBtn: page < Math.ceil(totalImages / 12),
       }));
     } catch (error) {
       this.setState({
         imagesError: error.message,
-        isLoading: false,
       });
+    } finally {
+      this.setState({ isLoading: false });
     }
   };
 
@@ -53,6 +53,7 @@ export class App extends Component {
       images: [],
       imagesError: '',
       isLoading: false,
+      showBtn: false,
     });
   };
   handleLoadMore = () => {
@@ -70,7 +71,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, isLoading, showModal, selectedImage } = this.state;
+    const { images, isLoading, showModal, selectedImage, showBtn } = this.state;
 
     return (
       <div className={css.App}>
@@ -80,9 +81,7 @@ export class App extends Component {
 
         {isLoading && <Loader />}
 
-        {images.length > 11 && !isLoading && (
-          <Button onClick={this.handleLoadMore}>Load More</Button>
-        )}
+        {showBtn && <Button onClick={this.handleLoadMore}>Load More</Button>}
 
         {showModal && (
           <Modal
